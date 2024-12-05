@@ -2,6 +2,8 @@
 FROM rocker/rstudio:4.2.3
 MAINTAINER Lee Evans <evans@ohdsi.org>
 
+ARG BIOMERIS_GITHUB_PATH
+
 # install OS dependencies including java and python 3
 RUN apt-get update && apt-get install -y openjdk-11-jdk liblzma-dev libbz2-dev libncurses5-dev curl python3-dev python3.venv \
 && R CMD javareconf \
@@ -20,7 +22,7 @@ RUN R -e "remotes::install_github(repo = 'ohdsi/SqlRender', upgrade = 'always')"
 # install OHDSI HADES R packages from CRAN and GitHub, temporarily adding a GitHub Personal Access Token (PAT) to the Renviron file
 RUN --mount=type=secret,id=build_github_pat \
 	cp /usr/local/lib/R/etc/Renviron /tmp/Renviron \
-        && echo "GITHUB_PAT=$(cat /run/secrets/build_github_pat)" >> /usr/local/lib/R/etc/Renviron \
+        && echo "GITHUB_PAT=${BIOMERIS_GITHUB_PATH}" >> /usr/local/lib/R/etc/Renviron \
         && R -e "remotes::install_github(repo = 'OHDSI/Hades', upgrade = 'always')" \
         && cp /tmp/Renviron /usr/local/lib/R/etc/Renviron
 
