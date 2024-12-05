@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM rocker/rstudio:4.2.1
+FROM rocker/rstudio:4.2.3
 MAINTAINER Lee Evans <evans@ohdsi.org>
 
 # install OS dependencies including java and python 3
@@ -14,6 +14,8 @@ RUN install2.r \
 	xml2 \
 	remotes \
 && rm -rf /tmp/download_packages/ /tmp/*.rds
+
+RUN R -e "remotes::install_github(repo = 'ohdsi/SqlRender', upgrade = 'always')"
 
 # install OHDSI HADES R packages from CRAN and GitHub, temporarily adding a GitHub Personal Access Token (PAT) to the Renviron file
 RUN --mount=type=secret,id=build_github_pat \
