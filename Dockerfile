@@ -22,7 +22,7 @@ RUN R -e "remotes::install_github(repo = 'ohdsi/SqlRender', upgrade = 'always')"
 # install OHDSI HADES R packages from CRAN and GitHub, temporarily adding a GitHub Personal Access Token (PAT) to the Renviron file
 RUN --mount=type=secret,id=build_github_pat \
 	cp /usr/local/lib/R/etc/Renviron /tmp/Renviron \
-        && echo "GITHUB_PAT=${BIOMERIS_GITHUB_PATH}" >> /usr/local/lib/R/etc/Renviron \
+        && echo "GITHUB_PAT=\$BIOMERIS_GITHUB_PATH" >> /usr/local/lib/R/etc/Renviron \
         && R -e "remotes::install_github(repo = 'OHDSI/Hades', upgrade = 'always')" \
         && cp /tmp/Renviron /usr/local/lib/R/etc/Renviron
 
